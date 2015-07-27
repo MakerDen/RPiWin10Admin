@@ -49,8 +49,13 @@ namespace MakerDenHostFiles
                 {
                     file.WriteLine("netsh interface ipv4 set dns \"ethernet\" static 10.1.1.5");
                     file.WriteLine("netsh interface ipv4 add dns name=\"ethernet\" address=10.1.1.6 index=2");
-                    file.WriteLine($"netsh interface ipv4 set address \"ethernet\" static 10.7.4.{i+START_ADDRESS:D3} 255.255.0.0 10.7.0.1");
-                    file.WriteLine("shutdown /s /t 10");
+                    file.WriteLine($"netsh interface ipv4 set address \"ethernet\" static 10.7.4.{i+START_ADDRESS} 255.255.0.0 10.7.0.1");
+                    file.WriteLine();
+                    file.WriteLine("w32tm /resync");
+                    file.WriteLine();
+                    file.WriteLine($"wmic computersystem where name=\"%COMPUTERNAME%\" call rename name=\"RPi{i + FIRST_MACHINE:D2}\"");
+                    file.WriteLine();
+                    file.WriteLine("shutdown /r /f /t 10");
                 }
             }
 
