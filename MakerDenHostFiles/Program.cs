@@ -10,8 +10,11 @@ namespace MakerDenHostFiles
     class Program
     {
         const string BASE_MACHINE_NAME = "RPi{0:D2}";
-        const string BASE_IP_ADDRESS = "192.168.1.{0}\tMINWINPC";
+        const string BASE_IP_ADDRESS = "192.168.3.{0}\tMINWINPC";
         const string FILE_NAME = "hosts";
+
+        // get these IDs from tzutil /l
+        const string TIME_ZONE_ID = "AUS Eastern Standard Time";
 
         const int FIRST_MACHINE = 1;
         const int START_ADDRESS = 101;
@@ -45,6 +48,7 @@ namespace MakerDenHostFiles
                     file.WriteLine("echo.Copying Pi Network Batch File");
                     file.WriteLine($"xcopy \"%~dp0\\..\\piBatFiles\\RPi192.168.1.{i + START_ADDRESS:D3}.bat\" c:\\source\\ /Y");
                     file.WriteLine("xcopy \"%~dp0\\..\\CloneMakerDen.bat\" c:\\source\\ /Y");
+                    file.WriteLine("xcopy \"%~dp0\\..\\MakerDenSettings.vssettings\" c:\\source\\ /Y");
                     file.WriteLine("xcopy \"%~dp0\\..\\ResetMakerDen.bat\" c:\\source\\ /Y");
                     file.WriteLine("xcopy \"%~dp0\\..\\Git-1.9.5-preview20150319.exe\" c:\\source\\ /Y");
                     file.WriteLine("xcopy \"%~dp0\\..\\Reset Labs.lnk\" c:\\users\\Dev\\Desktop\\ /Y");
@@ -60,6 +64,7 @@ namespace MakerDenHostFiles
                     file.WriteLine($"netsh interface ipv4 set address \"Wi-Fi\" static 192.168.1.{i+START_ADDRESS} 255.255.255.0 192.168.1.1");
                     file.WriteLine();
                     file.WriteLine("w32tm /resync");
+                    file.WriteLine($"tzutil /s {TIME_ZONE_ID}");
                     file.WriteLine();
                     file.WriteLine($"wmic computersystem where name=\"%COMPUTERNAME%\" call rename name=\"RPi{i + FIRST_MACHINE:D2}\"");
                     file.WriteLine();
